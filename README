@@ -1,0 +1,23 @@
+Description
+===========
+
+This images contains MPD, icecast2 and MPD_sima in order to serve an audio stream over http.
+
+Configuration
+=============
+
+Running a container to play to content of your music library:
+
+  - Audio stream available from http://127.0.0.1:8001
+  - MPD available on 127.0.0.1:6601
+
+..code-block:: sh
+        LISTEN=127.0.0.1
+        MUSIC="/path/to/my/music/library"
+        OPTIONS="-p ${LISTEN}:8001:8000"
+        OPTIONS="${OPTIONS} -p ${LISTEN}:6601:6600"
+        OPTIONS="${OPTIONS} --volume ${MUSIC}:/var/lib/mpd/music:ro"
+        docker run ${OPTIONS} --detach=true --name sima kaliko/sima
+
+
+ vim: syntax=rst ft=rst

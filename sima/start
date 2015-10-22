@@ -1,0 +1,18 @@
+#!/bin/sh
+
+# Hand over to icecast
+su -c "icecast2 -b -c /etc/icecast2/icecast.xml" icecast2
+
+su -c "mpd /etc/mpd.conf" mpd
+
+if [ -e /etc/mpd-sima.cfg ]; then
+    OPTIONS="${OPTIONS} --config /etc/mpd-sima.cfg"
+fi
+
+OPTIONS="${OPTIONS} --log /var/log/mpd/mpd-sima.log --daemon"
+su -c "sh /usr/bin/sima ${OPTIONS}" mpd
+
+tail -F /var/log/icecast2/access.log \
+        /var/log/icecast2/error.log \
+        /var/log/mpd/mpd.log \
+        /var/log/mpd/mpd-sima.log
