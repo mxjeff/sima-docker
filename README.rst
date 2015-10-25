@@ -3,8 +3,17 @@ Description
 
 This image contains MPD, icecast2 and MPD_sima in order to serve an audio stream over http.
 
-MPD is looking for music in /music (music_directory option) and keeps its
-dataset in /var/lib/mpd (options: playlist_directory, {db,sticker,state}_file).
+MPD is looking for music in /music (``music_directory`` option) and keeps its
+dataset in /var/lib/mpd (options: ``playlist_directory``, ``{db,sticker,state}_file``).
+
+TL;DR
+=====
+
+Build an image and run a container out of it.
+Then point you MPD client to the run container::
+
+    ./do build  # optional but then it'll fetch an image from hub.docker.com
+    MUSIC=/pat/to/my/music/library ./do run
 
 Configuration
 =============
@@ -45,5 +54,3 @@ Environment variable MPD_SIMA might be used to override default command line opt
     OPTIONS="-P --detach=true"
     docker run --env="MPD_SIMA=--log-level debug --log /var/log/mpd/mpd-sima.log" -v ${PWD}/log:/var/log/mpd ${OPTIONS} --name sima kaliko/sima
     # Discover ports with "docker port sima"
-
- vim: syntax=rst ft=rst

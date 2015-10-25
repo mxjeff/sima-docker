@@ -8,12 +8,21 @@ LISTEN=${LISTEN:-127.0.0.1}
 
 # make output verbose
 #set -o xtrace -o nounset
-
-_conf () {
-    # Get the latest icecast conf
-    docker run --rm sima -v ${DIR}:/tmp/ debian:latest cp -f /icecast/icecast.xml /tmp/current.icecast.conf.xml
+_is_running () {
+    IS_RUNNING=$(docker inspect --format='{{.State.Running}}' sima 2>&1)
+    case $IS_RUNNING in
+        true)
+            return 0
+            ;;
+        false)
+            return 1
+            ;;
+        *)
+            #echo $IS_RUNNING
+            return 2
+            ;;
+    esac
 }
-
 log_icecast () {
     # Monitor logs
     docker exec -ti sima /usr/bin/tail -F /var/log/icecast2/access.log /var/log/icecast2/error.log
@@ -25,40 +34,48 @@ build () {
 }
 
 log () {
-    if [ "$(docker inspect --format='{{.State.Running}}' sima)" = "true" ]; then
-        docker logs -f sima
-    fi
+    _is_running && docker logs -f sima
 }
 
 stop () {
-    docker stop -t 3 sima
+    _is_running && docker stop -t 3 sima
 }
 
-inspect () {
-    docker port sima | awk '$1 ~ "6600/tcp" { printf "MPD running on: %s\n", $3 }'
-    docker port sima | awk '$1 ~ "8000/tcp" { printf "HTTP running on: http://%s\n", $3 }'
+discover () {
+    arg=${1:-false}
+    _is_running || { echo "No running container detected!"; exit 1; }
+    docker port sima | awk '$1 ~ /^8000\/tcp.*/ { printf "# HTTP running on: http://%s\n", $3 }'
+    if [ $arg = "false" ];then
+        docker port sima | awk -F: '$1 ~ /^6600\/tcp.*/ { printf "# MPD running on port: %s\n", $2 }'
+    else
+        docker port sima | awk -F: '$1 ~ /^6600\/tcp.*/ { printf "# MPD running on port: %s\nexport MPD_PORT=%s\n", $2, $2 }'
+    fi
 }
 
-run () {
+run() { start; }
+start () {
     # Start
-    IS_RUNNING=$(docker inspect --format='{{.State.Running}}' sima)
-    case $IS_RUNNING in
-        true)
+    _is_running
+    case $? in
+        0)
             echo 'Already running container'
             ;;
-        false)
-            echo 'running the current sima container'
+        1)
+            echo 'Running the current sima container'
             docker start sima
             ;;
-        else)
-            test -z "${MUSIC}" && { echo "Need a music directory to mount please set MUSIC var"; exit 1; }
+        *)
+            test -z "${MUSIC}" && { echo "# Need a music directory to mount, please set MUSIC var:";
+                echo "MUSIC=~Music ./do start";
+                exit 1; }
             echo 'launching a new sima container'
             local options="-p ${LISTEN}:${ICE_PORT}:8000"
             options="${options} -p ${LISTEN}:${MPD_PORT}:6600"
-            options="${options} --volume ${MUSIC}:/var/lib/mpd/music:ro"
+            options="${options} --volume ${MUSIC}:/music:ro"
             docker run ${options} --detach=true --name sima kaliko/sima
             ;;
     esac
+    discover
 }
 
 $@
