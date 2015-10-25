@@ -24,7 +24,7 @@ Running a container to play to content of your music library:
   - MPD available on 127.0.0.1:6601
   - Music directory: /path/to/my/music/library
 
-..code-block:: sh
+::
     LISTEN=127.0.0.1
     MUSIC="/path/to/my/music/library"
     OPTIONS="-p ${LISTEN}:8001:8000"
@@ -35,14 +35,14 @@ Running a container to play to content of your music library:
 To run mpd-sima with a specific configuration mount the file in the running container.
 When /etc/mpd-sima.cfg is present in the container the default is to read it.
 
-..code-block:: sh
+::
     OPTIONS="-P --detach=true"
     docker run -v ./my.config:/etc/mpd-sima.cfg ${OPTIONS} --name sima kaliko/sima
     # Discover ports with "docker port sima"
 
 Mounting your music directory and saving MPD database in ${PWD}/data:
 
-..code-block:: sh
+::
     OPTIONS="-P --detach=true"
     docker run -v ~/Music:/music:ro -v ${PWD}/data:/var/lib/mpd ${OPTIONS} --name sima kaliko/sima
     # Discover ports with "docker port sima"
@@ -50,7 +50,7 @@ Mounting your music directory and saving MPD database in ${PWD}/data:
 Default option to run mpd-sima is "--log /var/log/mpd/mpd-sima.log".
 Environment variable MPD_SIMA might be used to override default command line options.
 
-..code-block:: sh
+::
     OPTIONS="-P --detach=true"
     docker run --env="MPD_SIMA=--log-level debug --log /var/log/mpd/mpd-sima.log" -v ${PWD}/log:/var/log/mpd ${OPTIONS} --name sima kaliko/sima
     # Discover ports with "docker port sima"
