@@ -23,10 +23,6 @@ _is_running () {
             ;;
     esac
 }
-log_icecast () {
-    # Monitor logs
-    docker exec -ti sima /usr/bin/tail -F /var/log/icecast2/access.log /var/log/icecast2/error.log
-}
 
 build () {
     # Build image with icecast
@@ -35,10 +31,6 @@ build () {
 
 log () {
     _is_running && docker logs -f sima
-}
-
-stop () {
-    _is_running && docker stop -t 3 sima
 }
 
 discover () {
@@ -52,7 +44,6 @@ discover () {
     fi
 }
 
-run() { start; }
 start () {
     # Start
     _is_running
@@ -76,6 +67,10 @@ start () {
             ;;
     esac
     discover
+}
+
+stop () {
+    _is_running && docker stop -t 3 sima
 }
 
 $@

@@ -19,5 +19,6 @@ EXPOSE 8000 6600
 
 ADD start /usr/bin/start-sima
 ADD mpd-sima /usr/bin/mpd-sima
+ADD mpd-sima.top.cfg mpd-sima.album.cfg /etc/
 
 ENTRYPOINT ["/bin/sh", "/usr/bin/start-sima"]
