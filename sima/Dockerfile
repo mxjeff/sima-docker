@@ -2,7 +2,7 @@ FROM debian:latest
 MAINTAINER Kaliko <kaliko@azylum.org>
 ENV DEBIAN_FRONTEND noninteractive
 
-RUN apt-get -y update && apt-get -y upgrade && apt-get install -y --no-install-recommends icecast2 mpd mime-support virtualenv
+RUN apt-get -y update && apt-get -y upgrade && apt-get install -y --no-install-recommends icecast2 mpd ncmpc mime-support virtualenv ncmpc
 RUN apt-get clean
 RUN usermod --shell /bin/dash icecast2
 RUN usermod --shell /bin/dash mpd
@@ -21,6 +21,7 @@ ENV MPD_HOST /run/mpd/socket
 
 ADD start /usr/bin/start-sima
 ADD mpd-sima /usr/bin/mpd-sima
+ADD ncmpc-sima /usr/bin/ncmpc-sima
 ADD mpd-sima.top.cfg mpd-sima.album.cfg /etc/
 
 ENTRYPOINT ["/bin/sh", "/usr/bin/start-sima"]

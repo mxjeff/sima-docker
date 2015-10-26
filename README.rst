@@ -23,6 +23,10 @@ You can set listening adress/port if needed::
     ./do start
     ./do discover
 
+ncmpc users can launch it from the container::
+
+    docker exec -it sima ncmpc-sima
+
 
 Configuration
 =============
