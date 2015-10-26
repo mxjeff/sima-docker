@@ -17,6 +17,8 @@ VOLUME /var/lib/mpd/
 # expose icecast and mpd
 EXPOSE 8000 6600
 
+ENV MPD_HOST /run/mpd/socket
+
 ADD start /usr/bin/start-sima
 ADD mpd-sima /usr/bin/mpd-sima
 ADD mpd-sima.top.cfg mpd-sima.album.cfg /etc/

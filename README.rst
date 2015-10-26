@@ -11,9 +11,18 @@ tl;dr
 
 ::
 
-    MUSIC=/pat/to/my/music/library ./do run
+    MUSIC=/path/to/my/music/library ./do start
 
 Then point your MPD client to ``127.0.0.1:6601``. Audio stream from http://127.0.0.1:8001/sima.ogg .
+
+You can set listening adress/port if needed::
+
+    MUSIC=/path/to/my/music/library \
+    LISTEN=192.168.0.10 \
+    ICEPORT=80 MPDPORT=6666
+    ./do start
+    ./do discover
+
 
 Configuration
 =============
