@@ -1,9 +1,10 @@
 #!/bin/sh
+# Can't remember why I need a shell for icecast2/mpd
 
 # Hand over to icecast
-su -c "icecast2 -b -c /etc/icecast2/icecast.xml" icecast2
+su -s /bin/dash -c "icecast2 -b -c /etc/icecast2/icecast.xml" icecast2
 
-su -c "mpd /etc/mpd.conf" mpd
+su -s /bin/dash -c "mpd /etc/mpd.conf" mpd
 
 OPTIONS=""
 if [ -z "${MPD_SIMA}" ];then
@@ -13,7 +14,7 @@ if [ -z "${MPD_SIMA}" ];then
 fi
 
 MPD_SIMA=${MPD_SIMA:-"--log /var/log/mpd/mpd-sima.log"}
-su -c "sh /usr/bin/mpd-sima --daemon ${OPTIONS} ${MPD_SIMA}" mpd
+su -s /bin/dash -c "sh /usr/bin/mpd-sima --daemon ${OPTIONS} ${MPD_SIMA}" mpd
 
 tail -F /var/log/icecast2/access.log \
         /var/log/icecast2/error.log \
