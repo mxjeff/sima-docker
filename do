@@ -34,7 +34,6 @@ _is_running () {
             return 1
             ;;
         *)
-            #echo $IS_RUNNING
             return 2
             ;;
     esac
