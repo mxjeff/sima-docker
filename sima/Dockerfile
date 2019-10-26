@@ -3,7 +3,7 @@ MAINTAINER Kaliko <kaliko@azylum.org>
 ENV DEBIAN_FRONTEND noninteractive
 
 ARG version
-ENV VERSION ${version:-0.14.4}
+ENV VERSION ${version:-0.15.1}
 
 RUN apt-get -y update && \
     apt-get install -y --no-install-recommends icecast2 mpd ncmpc mime-support ncmpc python3-venv && \
@@ -12,7 +12,7 @@ RUN install -d -o mpd /run/mpd
 ADD mpd.conf /etc/mpd.conf
 
 RUN python3 -m venv /var/lib/mpd-sima
-RUN bash -c "source /var/lib/mpd-sima/bin/activate && pip install MPD_sima==${VERSION}"
+RUN /var/lib/mpd-sima/bin/pip install MPD_sima==${VERSION}
 
 VOLUME /var/lib/mpd/
 

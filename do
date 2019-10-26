@@ -69,7 +69,7 @@ start () {
             ;;
         *)
             test -z "${MUSIC}" && { echo "# Need a music directory to mount, please set MUSIC var:";
-                echo "MUSIC=~Music ./do start";
+                echo "MUSIC=~/Music ./do start";
                 exit 1; }
             echo 'launching a new sima container'
             local options="-p ${LISTEN}:${ICE_PORT}:8000"
